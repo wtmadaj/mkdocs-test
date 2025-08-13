@@ -89,7 +89,7 @@ bool? searchNote(
 !!! warning "Deprecated"
 - Tags
 - TagsGridView > Container
-- 
+
 ```dart
 import 'dart:convert';
 import 'dart:math' as math;
