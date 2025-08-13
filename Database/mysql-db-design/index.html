@@ -1,0 +1,978 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../database-design/">
+      
+      
+        <link rel="next" href="../nosql-db-design/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>MySQL Database Design - RmmbrIt</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mysql-database-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="RmmbrIt" class="md-header__button md-logo" aria-label="RmmbrIt" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RmmbrIt
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MySQL Database Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  RmmbrIt
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../database-design/" class="md-tabs__link">
+          
+  
+  
+  Database
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="RmmbrIt" class="md-nav__button md-logo" aria-label="RmmbrIt" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RmmbrIt
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RmmbrIt
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Database
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Database
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    MySQL Database Design
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    MySQL Database Design
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#users-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Users Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attachments-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attachments Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attachments-application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments Application Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tags-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notetags-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoteTags Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NoteTags Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tags-application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags Application Logic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tags Application Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search-and-filter-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search and Filter Functionality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-data-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ensure Data Integrity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attachments-as-separate-table-attachments-within-notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments as separate table || Attachments within Notes Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tags-as-separate-table-tags-within-notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags as separate table || Tags within Notes Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schemas
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql-db-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NoSQL Database Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Queries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#users-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Users Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attachments-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attachments Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attachments-application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments Application Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tags-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notetags-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoteTags Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NoteTags Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tags-application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags Application Logic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tags Application Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search-and-filter-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search and Filter Functionality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-data-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ensure Data Integrity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attachments-as-separate-table-attachments-within-notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attachments as separate table || Attachments within Notes Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tags-as-separate-table-tags-within-notes-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tags as separate table || Tags within Notes Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schemas
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mysql-database-design">MySQL Database Design</h1>
+<hr />
+<h2 id="description">Description</h2>
+<h2 id="tables">Tables</h2>
+<h3 id="users-table">Users Table</h3>
+<ul>
+<li><strong>user_id (Primary Key)</strong>: UUID. A unique identifier for each user.</li>
+<li><strong>username or email</strong>: Unique identifier for login.</li>
+<li>Other user-related information like name, profile picture, etc.</li>
+</ul>
+<h3 id="notes-table">Notes Table</h3>
+<ul>
+<li><strong>note_id (Primary Key)</strong>: UUID. A unique identifier for each note.</li>
+<li><strong>user_id (Foreign Key)</strong>: References the <code>user_id</code> in the Users table to establish a relationship between users and their notes.</li>
+<li><strong>title</strong>: Title of the note.</li>
+<li><strong>content</strong>: The actual content of the note.</li>
+<li><strong>tag_count</strong>: number of tags associated with the note.</li>
+<li><strong>attachment_count</strong>: If using attachment table.</li>
+<li><strong>created_at</strong>: Timestamp indicating when the note was created.</li>
+<li><strong>updated_at</strong>: Timestamp indicating when the note was last updated.</li>
+</ul>
+<h3 id="attachments-table">Attachments Table</h3>
+<ul>
+<li><strong>attachment_id (Primary Key)</strong>: A unique identifier for each attachment.</li>
+<li><strong>note_id (Foreign Key)</strong>: References the <code>note_id</code> in the Notes table to associate attachments with specific notes.</li>
+<li><strong>file_name</strong>: Name of the attached file.</li>
+<li><strong>file_path</strong>: Path to the stored file on your server or cloud storage.</li>
+<li><strong>file_type</strong>: MIME type or file extension to identify the type of file.</li>
+<li><strong>created_at</strong>: Timestamp indicating when the attachment was added.</li>
+</ul>
+<h4 id="attachments-application-logic">Attachments Application Logic</h4>
+<p>When a user adds an attachment to a note, your application logic should:
+1. Store the file on your server or cloud storage.
+2. Create a record in the Attachments table with information about the attachment and its association with the corresponding note.
+3. Update the attachment_count column in the Notes table for the respective note.
+4. When displaying notes, retrieve attachments associated with each note and provide appropriate links or previews for users to access them.</p>
+<p><strong>Security Considerations</strong>: Ensure proper validation and sanitization of file uploads to prevent security vulnerabilities like file injection attacks.
+Implement access controls to ensure that users can only access attachments associated with their own notes.</p>
+<p><strong>Scalability and Performance</strong>: Consider scalability and performance implications, especially if your application allows large file uploads. You may need to optimize storage and retrieval mechanisms, and possibly implement caching strategies for frequently accessed attachments.</p>
+<h3 id="tags-table">Tags Table</h3>
+<ul>
+<li>tag_id (Primary Key): UUID. A unique identifier for each tag.</li>
+<li>tag_name: The name of the tag.</li>
+<li>Optionally, add additional columns such as created_at to track when the tag was created.</li>
+</ul>
+<h3 id="notetags-table">NoteTags Table</h3>
+<p>Create an intermediate table to establish a many-to-many relationship between notes and tags.</p>
+<ul>
+<li>note_id (Foreign Key): References the note_id in the Notes table.</li>
+<li>tag_id (Foreign Key): References the tag_id in the Tags table.</li>
+<li>Optionally, additional columns like created_at to track when the tag was added to the note.</li>
+</ul>
+<h4 id="tags-application-logic">Tags Application Logic</h4>
+<p>When a user adds tags to a note, your application logic should:
+1. Create records in the Tags table for any new tags that don't already exist.
+2. Create records in the NoteTags table to establish associations between the note and the tags.
+3. Update the tag_count column in the Notes table for the respective note.
+4. When displaying notes, retrieve tags associated with each note and display them accordingly.</p>
+<h5 id="search-and-filter-functionality">Search and Filter Functionality</h5>
+<p>Implement search and filter functionality based on tags, allowing users to easily find notes with specific tags.</p>
+<h5 id="ensure-data-integrity">Ensure Data Integrity</h5>
+<p>Implement constraints or validations to ensure that tags are unique and properly formatted.
+Implement cascading deletes or updates to maintain data integrity when notes or tags are deleted or modified.</p>
+<hr />
+<h2 id="attachments-as-separate-table-attachments-within-notes-table">Attachments as separate table || Attachments within Notes Table</h2>
+<p>Using a separate attachments table instead of inserting attachments directly into the notes table offers several benefits:</p>
+<ul>
+<li><strong>Normalization</strong>: Separating attachments into their own table follows the principles of database normalization, specifically the Third Normal Form (3NF). Each table in the database represents a single entity (in this case, either notes or attachments), which reduces data redundancy and ensures efficient storage.</li>
+<li><strong>Scalability</strong>: Storing attachments in a separate table can improve the scalability of your database. If notes can have multiple attachments, storing them directly in the notes table could lead to bloating and increased storage requirements as the number of attachments grows. With a separate table, you can more efficiently manage and scale the storage of attachments independently of notes.</li>
+<li><strong>Flexibility</strong>: Separating attachments into their own table allows for more flexibility in managing attachments. You can implement features like versioning, access controls, and different storage mechanisms (e.g., local file system, cloud storage) more effectively when attachments are stored separately.</li>
+<li><strong>Performance</strong>: Retrieving notes without attachments can be faster when attachments are stored in a separate table, especially if attachments are large or if there are many of them. This separation allows the database to optimize queries for retrieving notes without having to deal with the overhead of fetching potentially large binary data.</li>
+<li><strong>Security</strong>: Storing attachments separately can enhance security by allowing you to implement different access controls and encryption mechanisms specifically tailored to attachment storage. It can also help mitigate risks associated with SQL injection attacks targeting attachment data.</li>
+</ul>
+<p>In summary, using a separate attachments table provides better data organization, scalability, flexibility, performance, and security compared to storing attachments directly within the notes table.</p>
+<hr />
+<h2 id="tags-as-separate-table-tags-within-notes-table">Tags as separate table || Tags within Notes Table</h2>
+<p>If tags are an enumeration, meaning they have a predefined set of values and don't change frequently, you might wonder about the necessity of using separate Tag and NoteTag tables. While it might seem simpler to just have a column for tags directly within the Notes table, there are still benefits to using separate tables:</p>
+<ul>
+<li><strong>Consistency and Data Integrity</strong>: By using a separate Tag table, you enforce consistency in your data. This ensures that all tags are uniformly represented and eliminates the risk of typographical errors or inconsistencies in tag names. It also facilitates easier management if changes to the tag set are required in the future.</li>
+<li><strong>Scalability and Flexibility</strong>: Even if tags are currently an enumeration, future requirements might change. For example, you might want to add additional attributes to tags (e.g., descriptions, colors) or allow users to create custom tags. Using a separate Tag table provides flexibility to accommodate such changes without needing to modify the structure of the Notes table.</li>
+<li><strong>Normalization</strong>: Using separate tables follows the principles of database normalization, specifically the Third Normal Form (3NF). Each table represents a distinct entity (tags and notes), which helps reduce data redundancy and improves database efficiency.</li>
+<li><strong>Efficient Queries</strong>: Separating tags into their own table allows for more efficient querying, especially if you need to perform operations like searching for notes based on tags or aggregating data by tag. It also facilitates easier maintenance and optimization of database indexes for tag-related queries.</li>
+<li><strong>Integration with Other Features</strong>: Having a separate Tag table provides a foundation for implementing additional features related to tags, such as tag-based search, tag suggestions, or tag analytics. It also makes it easier to integrate with external systems or APIs that might use standardized tag formats.</li>
+</ul>
+<p>While using separate Tag and NoteTag tables might introduce some additional complexity compared to storing tags directly within the Notes table, the benefits in terms of data consistency, scalability, and flexibility often outweigh the overhead. Additionally, modern database systems are well-equipped to efficiently handle joins between tables, making the performance impact of using separate tables minimal in most cases.</p>
+<h2 id="schemas">Schemas</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "content.code.copy", "content.code.select"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+    
+  </body>
+</html>
