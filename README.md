@@ -31,3 +31,5 @@ deactivate
 # Docs
 https://squidfunk.github.io/mkdocs-material/getting-started/
 
+## Icon Search
+https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/#using-icons

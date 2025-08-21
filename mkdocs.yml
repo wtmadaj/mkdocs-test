@@ -11,19 +11,18 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/brightness-7
+        icon: material/lightbulb-on
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/brightness-4
+        icon: material/lightbulb-off
         name: Switch to system preference
   features:
     - navigation.tabs
     - content.code.copy
     - content.code.select
-
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -36,3 +35,4 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - md_in_html
